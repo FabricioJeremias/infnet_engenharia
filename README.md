@@ -24,48 +24,35 @@ O diagrama abaixo ilustra o fluxo de dados e as etapas dos pipelines do projeto:
 ```mermaid
 graph TD
     subgraph Aquisição_de_Dados
-        A[Dados Brutos: dataset_kobe_dev.parquet, dataset_kobe_prod.parquet] --> B[Salvar em /data/01_raw/]
+        A[Dados Brutos: dev e prod] --> B[Salvar em /data/01_raw/]
     end
 
-    subgraph Pipeline_Data_Processing_dp
-        B --> C{Carregar dataset_dev e dataset_prod}
-        C --> D[Combinar Dev e Prod: preprocess_shuttles]
-        D --> E[Salvar: data_filtered.parquet]
-        E --> G[Dividir em Treino/Teste: split_data]
-        G --> H[Salvar: base_train.parquet]
-        G --> I[Salvar: base_test.parquet]
-        B --> J[Pré-processar dataset_prod: preprocess_single_dataset]
-        J --> K[Salvar: preprocessed_prod_data.parquet]
+    subgraph Pipeline_Data_Processing
+        B --> C[Processar e Dividir Dados]
+        C --> D[Salvar: base_train e base_test]
+        B --> E[Pré-processar Prod]
+        E --> F[Salvar: preprocessed_prod]
     end
 
-    subgraph Pipeline_Data_Science_ds
-        H --> L[Treinar Regressão Logística]
-        I --> L
-        L --> M[Salvar: lr_model.pkl]
-        M --> P{Selecionar Melhor Modelo F1 Score}
-        H --> N[Treinar Árvore de Decisão]
-        I --> N
-        N --> O[Salvar: dt_model.pkl]
-        O --> P
-        I --> P
-        P --> Q[Salvar: final_model.pkl]
-        P --> R[Salvar: model_justification.csv]
+    subgraph Pipeline_Data_Science
+        D --> G[Treinar Modelos: LR e DT]
+        G --> H[Selecionar Melhor Modelo]
+        H --> I[Salvar: final_model]
     end
 
     subgraph Pipeline_Aplicacao
-        K --> S[Aplicar Modelo: apply_model_to_production]
-        Q --> S
-        S --> T[Salvar: production_predictions.parquet]
+        F --> J[Aplicar Modelo]
+        I --> J
+        J --> K[Salvar: predictions]
     end
 
     subgraph MLflow_Tracking
-        L --> W[MLflow]
-        N --> W
-        P --> W
-        S --> W
+        G --> L[MLflow]
+        H --> L
+        J --> L
     end
 
-    style W fill:#f9f,stroke:#333,stroke-width:2px
+    style L fill:#f9f,stroke:#333,stroke-width:2px
 ```
 
 ## Detalhamento das Etapas
