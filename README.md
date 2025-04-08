@@ -24,45 +24,45 @@ O diagrama abaixo ilustra o fluxo de dados e as etapas dos pipelines do projeto:
 ```mermaid
 graph TD
     subgraph "Aquisição de Dados"
-        A[Dados Brutos: dataset_kobe_dev.parquet, dataset_kobe_prod.parquet] --> B(Salvar em /data/01_raw/);
+        A[Dados Brutos: dataset_kobe_dev.parquet, dataset_kobe_prod.parquet] --> B[Salvar em /data/01_raw/]
     end
 
     subgraph "Pipeline: Data Processing (dp)"
-        B --> C{Carregar dataset_dev e dataset_prod};
-        C --> D[Combinar Dev e Prod: preprocess_shuttles];
-        D --> E[Salvar: data_filtered.parquet];
-        E --> G[Dividir em Treino/Teste: split_data];
-        G -- train_data --> H[Salvar: base_train.parquet];
-        G -- test_data --> I[Salvar: base_test.parquet];
-        B -- dataset_prod --> J[Pré-processar dataset_prod: preprocess_single_dataset];
-        J --> K[Salvar: preprocessed_prod_data.parquet];
+        B --> C{Carregar dataset_dev e dataset_prod}
+        C --> D[Combinar Dev e Prod: preprocess_shuttles]
+        D --> E[Salvar: data_filtered.parquet]
+        E --> G[Dividir em Treino/Teste: split_data]
+        G -->|train_data| H[Salvar: base_train.parquet]
+        G -->|test_data| I[Salvar: base_test.parquet]
+        B -->|dataset_prod| J[Pré-processar dataset_prod: preprocess_single_dataset]
+        J --> K[Salvar: preprocessed_prod_data.parquet]
     end
 
     subgraph "Pipeline: Data Science (ds)"
-        H -- base_train --> L[Treinar Regressão Logística];
-        I -- base_test --> L;
-        L --> M[Salvar: lr_model.pkl];
-        M --> P{Selecionar Melhor Modelo (F1 Score)};
-        H -- base_train --> N[Treinar Árvore de Decisão];
-        I -- base_test --> N;
-        N --> O[Salvar: dt_model.pkl];
-        O --> P;
-        I -- base_test --> P;
-        P -- Melhor Modelo --> Q[Salvar: final_model.pkl];
-        P -- Justificação --> R[Salvar: model_justification.csv];
+        H -->|base_train| L[Treinar Regressão Logística]
+        I -->|base_test| L
+        L --> M[Salvar: lr_model.pkl]
+        M --> P{Selecionar Melhor Modelo (F1 Score)}
+        H -->|base_train| N[Treinar Árvore de Decisão]
+        I -->|base_test| N
+        N --> O[Salvar: dt_model.pkl]
+        O --> P
+        I -->|base_test| P
+        P -->|Melhor Modelo| Q[Salvar: final_model.pkl]
+        P -->|Justificação| R[Salvar: model_justification.csv]
     end
 
     subgraph "Pipeline: Aplicação (aplicacao)"
-        K -- preprocessed_prod_data --> S[Aplicar Modelo: apply_model_to_production];
-        Q -- final_model --> S;
-        S -- Previsões --> T[Salvar: production_predictions.parquet];
+        K -->|preprocessed_prod_data| S[Aplicar Modelo: apply_model_to_production]
+        Q -->|final_model| S
+        S -->|Previsões| T[Salvar: production_predictions.parquet]
     end
 
     subgraph "MLflow Tracking"
-        L -- Métricas LR --> W((MLflow));
-        N -- Métricas DT --> W;
-        P -- Métricas Comparação & Params --> W;
-        S -- Métricas Prod & Artefato --> W;
+        L -->|Métricas LR| W[MLflow]
+        N -->|Métricas DT| W
+        P -->|Métricas Comparação & Params| W
+        S -->|Métricas Prod & Artefato| W
     end
 
     style W fill:#f9f,stroke:#333,stroke-width:2px
