@@ -4,9 +4,9 @@
 
 ## Visão Geral (Padrão Kedro)
 
-Este é o seu novo projeto Kedro, gerado usando `kedro 0.19.12`.
+Projeto Kedro gerado usando `kedro 0.19.12`.
 
-Dê uma olhada na [documentação do Kedro](https://docs.kedro.org) para começar.
+Documentação disponível em [documentação do Kedro](https://docs.kedro.org).
 
 ## Visão Geral do Projeto (Específica)
 
@@ -78,26 +78,8 @@ graph TD
 *   **Logar Métricas:** Calcula e loga as métricas Log Loss e F1-Score no MLflow, *se* a coluna `shot_made_flag` estiver presente nos dados de produção.
 *   **Salvar Previsões:** Salva o DataFrame resultante (dados de produção + colunas `prediction_label` e `prediction_score`) como `production_predictions.parquet`. Este arquivo pode ser logado como artefato no MLflow.
 
-## Regras e Diretrizes (Padrão Kedro)
 
-Para obter o melhor do template:
-
-* Não remova nenhuma linha do arquivo `.gitignore` que fornecemos
-* Certifique-se de que seus resultados possam ser reproduzidos seguindo uma [convenção de engenharia de dados](https://docs.kedro.org/en/stable/faq/faq.html#what-is-data-engineering-convention)
-* Não faça commit de dados para o seu repositório
-* Não faça commit de nenhuma credencial ou configuração local para o seu repositório. Mantenha todas as suas credenciais e configurações locais em `conf/local/`
-
-## Como Instalar Dependências
-
-Declare quaisquer dependências em `requirements.txt` para instalação via `pip`.
-
-Para instalá-las, execute:
-
-```
-pip install -r requirements.txt
-```
-
-## Como Executar seu Pipeline Kedro
+## Como Executar Pipeline Kedro
 
 Você pode executar o projeto Kedro com:
 
@@ -120,7 +102,7 @@ kedro run --pipeline aplicacao
 Este projeto inclui um dashboard interativo construído com Streamlit para visualizar e interagir com as predições do modelo.
 
 1.  **Certifique-se de que as dependências estão instaladas:**
-    Se você ainda não o fez, instale todas as dependências, incluindo o Streamlit:
+    Instale todas as dependências, incluindo o Streamlit:
     ```bash
     # Execute a partir da pasta raiz do projeto (projetoinfnet)
     pip install -r requirements.txt
